@@ -10,6 +10,13 @@ function Home() {
 
   return (
     <div className="home">
+      <section className="home__hero">
+        <h1 className="home__title">Explore countries around the world</h1>
+        <p className="home__copy">
+          Search for a country to see its flag, population, region, and capital city.
+        </p>
+      </section>
+
       <SearchBar query={query} onQueryChange={setQuery} onClear={() => setQuery('')} />
 
       <div className="home__info" aria-live="polite">

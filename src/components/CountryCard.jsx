@@ -12,15 +12,17 @@ function CountryCard({ country }) {
       />
       <div className="card__body">
         <h3 className="card__name">{name.common}</h3>
-        <p>
-          <span>Population:</span> {population.toLocaleString()}
-        </p>
-        <p>
-          <span>Region:</span> {region}
-        </p>
-        <p>
-          <span>Capital:</span> {capital?.[0] ?? 'N/A'}
-        </p>
+        <div className="card__meta">
+          <p>
+            <span>Population:</span> {population.toLocaleString()}
+          </p>
+          <p>
+            <span>Region:</span> {region}
+          </p>
+          <p>
+            <span>Capital:</span> {capital?.[0] ?? 'N/A'}
+          </p>
+        </div>
       </div>
     </Link>
   )
