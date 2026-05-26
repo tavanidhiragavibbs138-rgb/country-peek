@@ -10,14 +10,23 @@ function favouritesReducer(state, action) {
     }
     case 'REMOVE_FAVOURITE':
       return state.filter((country) => country.cca3 !== action.payload)
+    case 'CLEAR_FAVOURITES':
+      return []
     default:
       return state
   }
 }
 
+function getInitialFavourites() {
+  try {
+    return JSON.parse(localStorage.getItem('favourites') || '[]')
+  } catch (error) {
+    return []
+  }
+}
+
 export function FavouritesProvider({ children }) {
-  const initialFavourites = JSON.parse(localStorage.getItem('favourites') || '[]')
-  const [favourites, dispatch] = useReducer(favouritesReducer, initialFavourites)
+  const [favourites, dispatch] = useReducer(favouritesReducer, [], getInitialFavourites)
 
   useEffect(() => {
     localStorage.setItem('favourites', JSON.stringify(favourites))

@@ -7,7 +7,9 @@ function CountryCard({ country }) {
   const isSaved = favourites.some((fav) => fav.cca3 === cca3)
 
   function handleToggleFavourite(e) {
+    e.preventDefault()
     e.stopPropagation()
+
     if (isSaved) {
       dispatch({ type: 'REMOVE_FAVOURITE', payload: cca3 })
     } else {

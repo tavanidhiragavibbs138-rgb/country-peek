@@ -3,7 +3,11 @@ import { useFavourites } from '../context/FavouritesContext'
 import CountryCard from '../components/CountryCard'
 
 function Favourites() {
-  const { favourites } = useFavourites()
+  const { favourites, dispatch } = useFavourites()
+
+  const handleClearAll = () => {
+    dispatch({ type: 'CLEAR_FAVOURITES' })
+  }
 
   if (favourites.length === 0) {
     return (
@@ -19,7 +23,15 @@ function Favourites() {
 
   return (
     <div className="favourites-page">
-      <h2 className="favourites-title">Saved countries</h2>
+      <div className="favourites-header">
+        <div>
+          <h2 className="favourites-title">Saved countries</h2>
+          <p className="favourites-copy">You have {favourites.length} saved country{favourites.length > 1 ? 'ies' : ''}.</p>
+        </div>
+        <button type="button" className="secondary-button" onClick={handleClearAll}>
+          Clear all
+        </button>
+      </div>
       <div className="cards-grid">
         {favourites.map((country) => (
           <CountryCard key={country.cca3} country={country} />
