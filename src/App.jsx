@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
 import Home from './pages/Home'
+import Favourites from './pages/Favourites'
 import NotFound from './pages/NotFound'
 import './styles/App.css'
 
@@ -16,10 +17,7 @@ function App() {
               path="/country/:name"
               element={<div className="placeholder">Country detail placeholder</div>}
             />
-            <Route
-              path="/favourites"
-              element={<div className="placeholder">Favourites placeholder</div>}
-            />
+            <Route path="/favourites" element={<Favourites />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
