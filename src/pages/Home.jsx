@@ -1,61 +1,43 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import SearchBar from '../components/SearchBar'
 import CountryCard from '../components/CountryCard'
+import Loader from '../components/Loader'
+import useCountries from '../hooks/useCountries'
 
 function Home() {
   const [query, setQuery] = useState('')
-  const [countries, setCountries] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    if (!query) {
-      setCountries([])
-      setError(null)
-      setLoading(false)
-      return
-    }
-
-    let active = true
-    const timer = setTimeout(() => {
-      setLoading(true)
-      setError(null)
-
-      fetch(`https://restcountries.com/v3.1/name/${encodeURIComponent(query)}`)
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error('No countries found.')
-          }
-          return res.json()
-        })
-        .then((data) => {
-          if (!active) return
-          setCountries(data)
-          setError(null)
-        })
-        .catch(() => {
-          if (!active) return
-          setCountries([])
-          setError('No countries found.')
-        })
-        .finally(() => {
-          if (!active) return
-          setLoading(false)
-        })
-    }, 400)
-
-    return () => {
-      active = false
-      clearTimeout(timer)
-    }
-  }, [query])
+  const { countries, loading, error } = useCountries(query)
 
   return (
     <div className="home">
-      <SearchBar query={query} onQueryChange={setQuery} />
+      <SearchBar query={query} onQueryChange={setQuery} onClear={() => setQuery('')} />
 
-      {loading && <p className="home__status">Loading...</p>}
-      {error && <p className="home__status home__status--error">{error}</p>}
+      <div className="home__info" aria-live="polite">
+        {loading && <Loader />}
+
+        {!loading && query && query.trim().length > 0 && query.trim().length < 2 && (
+          <p className="home__status">Type at least 2 characters to search.</p>
+        )}
+
+        {!loading && !query && !error && (
+          <p className="home__status">
+            Start searching to explore countries. Try <strong>Brazil</strong>,{' '}
+            <strong>India</strong>, or <strong>France</strong>.
+          </p>
+        )}
+
+        {!loading && !error && countries.length > 0 && (
+          <p className="home__status home__status--summary">
+            Showing {countries.length} result{countries.length > 1 ? 's' : ''} for "{query.trim()}"
+          </p>
+        )}
+
+        {!loading && error && (
+          <p className="home__status home__status--error" role="alert">
+            {error}
+          </p>
+        )}
+      </div>
 
       {!loading && !error && countries.length > 0 && (
         <div className="cards-grid">
@@ -63,10 +45,6 @@ function Home() {
             <CountryCard key={country.cca3} country={country} />
           ))}
         </div>
-      )}
-
-      {!loading && !error && countries.length === 0 && !query && (
-        <p className="home__status">Start searching to explore countries.</p>
       )}
     </div>
   )
